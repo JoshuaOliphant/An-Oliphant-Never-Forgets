@@ -1,7 +1,7 @@
 ---
 layout: post
 title: How to get the status of a Gitlab child pipeline
-date: 2023-09-23
+date: 2023-08-23
 catagories: Gitlab
 ---
 I recently needed to get the status of a child pipeline in Gitlab so that I could send the result to a Slack channel. After looking at the documentation for pipelines, it clearly states that the endpoint that lists the pipelines for a project does not include child pipelines. It even has a source query where you could say:
