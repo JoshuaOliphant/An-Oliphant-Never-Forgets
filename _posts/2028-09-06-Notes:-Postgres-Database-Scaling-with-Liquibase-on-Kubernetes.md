@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Notes:: Postgres Database Scaling with Liquibase on Kubernetes
+title: Postgres Database Scaling with Liquibase on Kubernetes
 date: 2023-09-06
 catagories: Kubernetes, Liquibase, Postgres, Database
 ---
