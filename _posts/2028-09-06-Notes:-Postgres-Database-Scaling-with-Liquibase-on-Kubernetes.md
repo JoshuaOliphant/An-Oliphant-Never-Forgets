@@ -1,87 +1,77 @@
 ---
 layout: post
-title: Postgres Database Scaling with Liquibase on Kubernetes
+title: Scaling Postgres Databases with Liquibase on Kubernetes
 date: 2023-09-06
-catagories: Kubernetes, Liquibase, Postgres, Database
+categories: [Kubernetes, Liquibase, Postgres, Database, Spring]
 ---
-Did some research this last week on scaling stateful applications in Kubernetes, specifically with Postgres databases. The project I'm working at work also involves Liquibase for database migrations, so researched how that impacts scaling as well. The following is the cleaned up notes I took.
 
-Scaling
+I recently dived into scaling stateful applications in Kubernetes, focusing particularly on Postgres databases. My current project also integrates Liquibase for database migrations, which led me to explore its impact on scaling. Here are the consolidated notes from my research.
 
-Configuration
-- Configuration Options: https://github.com/bitnami/charts/tree/main/bitnami/postgresql/
-- Setting Replica Count: Use the 'replicaCount' chart parameter to scale the cluster horizontally. After setting the password, perform a regular chart upgrade.
-  - Replica count should be an odd number
-  - Enable Replication: '--set replication.enabled=true'
-  - Architecture: Default is 'architecture=standalone', change to 'replication'
-  - Update Strategy: Default is 'primary.updateStrategy.type=RollingUpdate'
+## Postgres Helm Charts
 
-Replication
-- Postgres doesn't natively support multi-master clustering. Employ a single master node with multiple read replicas. The master node can fail over to the read replicas.
-- Connection Pooling and Routing: Consider PGBouncer for connection pooling.
-- Failover: The Helm chart should automatically handle failover if the primary node goes down. Testing this functionality is recommended.
-- Node Anti-Affinity: Utilize soft node anti-affinity to ensure replicas distribute across different Kubernetes nodes.
+### Configuration
 
-High Availability Version
-- Switching to HA: Consider the HA version for better replication and availability. https://github.com/bitnami/charts/tree/main/bitnami/postgresql-ha
-- Replica Count: Default is 'postgresql.replicaCount=3' (always an odd number). This provides one write replica master node and two read replicas.
-- Witness Nodes: Can be configured for handling network partitions.
-- Pgpool: Manages read/write connections and offers features like promoting read replicas, parallelizing queries, caching, connection limiting, and failover handling.
-- Repmgr: Streamlines setup, offers failover support, monitoring, switchover functionality, WAL shipping, integration with other tools, and notifications.
+We have been using the [Bitnami Postgres Chart](https://github.com/bitnami/charts/tree/main/bitnami/postgresql/).
 
-Liquibase
+- **Setting Replica Count**: Utilize the 'replicaCount' chart parameter to scale the cluster horizontally. This is the normal field for scaling in Kubernetes.
+  - Ensure the replica count is an odd number.
+  - To enable replication, use: '--set replication.enabled=true'.
+  - The default architecture is 'architecture=standalone'; switch to 'replication'.
+  - The default update strategy is 'primary.updateStrategy.type=RollingUpdate'.
 
-Liquibase, Spring Boot, and Kubernetes
-- Problem Statement: Liveness and Readiness Probes may inadvertently kill an application pod during a migration, leading to migration lock issues.
+### Replication
 
-Options:
-1. Extend Probe Deadlines:
-   - Pros: Simplicity
-   - Cons: Possible interruptions, longer wait times, potential readiness issues
-2. Lifecycle Hooks:
-   - Pros: Ensures lock release before termination
-   - Cons: Script reliability, potential stuck applications
-3. Separate Container (Job):
-   - Pros: Reduces risk of probe-induced interruptions
-   - Cons: Requires pipeline coordination, needs resource allocation
-4. Use Init Container:
-   - Pros: Not probe-affected, no extra pods or coordination overhead
-   - Cons: Migration remains tied to the application
+Postgres doesn't inherently support multi-master clustering. Employ a single master node and complement it with multiple read replicas. If needed, the master node can fail over to the read replicas.
 
-Recommended Migration Approach
-- Separation: Use Kubernetes Jobs or Init Containers to separate migration from application startup.
-- Probes: Configure Kubernetes readiness and liveness probes.
-- Monitoring and Alerts: Log monitoring and alert setup is crucial.
-- Backup: Always backup the database before migrations.
-- Testing: Test migrations in a mirrored environment.
-- Version Control and Documentation: Maintain a history of changes.
+- **Connection Pooling and Routing**: PGBouncer is a reliable option for connection pooling.
+- **Failover**: The Helm chart is designed to automatically manage failover if the primary node becomes unresponsive. Nonetheless, testing this behavior is essential.
+- **Node Anti-Affinity**: Adopt soft node anti-affinity to ensure that replicas are distributed across Kubernetes cluster nodes.
 
-Steps
+### High Availability Version
 
-1. Preparation:
-   - Backup the primary database.
+I think we should switch to [Bitnami HA version](https://github.com/bitnami/charts/tree/main/bitnami/postgresql-ha) to enhance replication and overall availability.
+
+- **Replica Count**: By default, 'postgresql.replicaCount=3' (ensure it's an odd number). This configuration results in one write replica master node and two read replicas.
+- **Witness Nodes**: These can be configured to manage network partitions.
+- **Pgpool**: This tool manages read/write connections and offers features like read replica promotions, query parallelization, caching, connection limits, and failover mechanisms.
+- **Repmgr**: Simplifies the setup, provides failover support, monitoring, switchover functionality, WAL shipping, and integrates smoothly with other tools. It also facilitates timely notifications.
+
+## Liquibase
+
+Using Liquibase, Spring Boot, and Kubernetes in tandem presents a challenge. The Liveness and Readiness Probes might inadvertently terminate an application pod during a migration, resulting in migration lock issues.
+
+### Options
+
+1. **Extend Probe Deadlines**:
+   - Pros: Offers simplicity.
+   - Cons: Might introduce interruptions, extended wait durations, and potential readiness challenges.
+2. **Lifecycle Hooks**:
+   - Pros: Guarantees lock release before any termination.
+   - Cons: Reliability of the script is crucial, and there's a risk of applications getting stuck.
+3. **Separate Container (Job)**:
+   - Pros: Minimizes the risk of probe-induced interruptions.
+   - Cons: Needs coordination within the pipeline and appropriate resource allocation.
+4. **Use Init Container**:
+   - Pros: Unaffected by probes and avoids additional pods or coordination overhead.
+   - Cons: The migration process remains closely tied to the application.
+
+### Recommended Migration Approach
+
+- **Separation**: Use Kubernetes Jobs or Init Containers to decouple the migration from the application startup.
+- **Probes**: Set up Kubernetes readiness and liveness probes accurately.
+- **Monitoring and Alerts**: Monitoring logs and setting up alerts are imperative.
+- **Backup**: Ensure the database is backed up before initiating any migrations.
+- **Testing**: It's crucial to test migrations in an environment that mirrors the production setup.
+- **Version Control and Documentation**: Maintain a comprehensive history of all changes for clarity.
+
+#### Steps
+
+1. **Preparation**:
+   - Secure a backup of the primary database.
    - Test in a staging environment.
-   - Set up monitoring and alerts.
-2. Handling Replicas:
-   - Pause or manage replication during migration.
-3. Migration Execution:
-   - Use a low-traffic maintenance window.
-   - Be aware of Liquibase locking.
-   - Consider batching changesets.
-4. Post-Migration:
-   - Ensure replication consistency.
-   - Test the system post-migration.
-   - Monitor system performance.
-5. Rollback Strategy:
-   - Use Liquibase rollback or backup restoration.
-6. Documentation:
-   - Document all migration steps and issues.
-7. Communication:
-   - Keep stakeholders informed.
-
-Note on locking during migrations
-When Liquibase mentions "locking", it refers to a lock on the DATABASECHANGELOGLOCK table, ensuring only one Liquibase instance updates the schema at once.
-
-- Liquibase Lock Mechanism: Only one instance can acquire the lock and proceed with the migration.
-- Impact on Applications: This lock doesn't affect regular application operations but ensures non-concurrent migrations.
-- Actual Database Locks: Operations like 'ALTER TABLE' might temporarily lock specific parts of the database.
+   - Implement monitoring and alerts.
+2. **Handling Replicas**:
+   - Pause or manage replication while the migration is ongoing.
+3. **Migration Execution**:
+   - Opt for a maintenance window during low-traffic periods.
+   - Remain cognizant of Liquibase's locking
