@@ -2,7 +2,7 @@
 layout: post
 title: Gitlab Flow vs. GitFlow
 date: 2023-10-10
-catagories: [Gitlab, GitFlow, Workflow, Git, CI/CD]
+categories: [Gitlab, GitFlow, Workflow, Git, CI/CD]
 ---
 ## Introduction
 
