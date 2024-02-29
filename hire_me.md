@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "hire me"
+title: "hire me (cv/resume)"
 permalink: /hire_me
 ---
 ![Joshua Oliphant's profile photo](joshua_oliphant.jpeg) Joshua Oliphant
