@@ -3,7 +3,7 @@ layout: page
 title: "hire me (cv/resume)"
 permalink: /hire_me
 ---
-![Joshua Oliphant's profile photo](joshua_oliphant.jpeg) Joshua Oliphant
+# Joshua Oliphant
 =====================================
 
 Hi, I'm Joshua 👋! I'm an experienced Senior Software Engineer specializing in backend applications, DevOps, and infrastructure building. With a strong background in Java microservices, Python automation, CI/CD pipelines, Kubernetes, and Docker, I'm passionate about delivering secure, scalable, and innovative solutions. Currently, I'm expanding my expertise in AI Engineering, with hands-on experience in prompt engineering, using the OpenAI API. I'm driven by a passion for staying at the forefront of technological advancements and solving complex problems.
