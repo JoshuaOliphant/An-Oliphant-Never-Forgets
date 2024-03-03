@@ -2,7 +2,7 @@
 layout: post
 title: Drafts to Raindrop Action
 date: 2024-02-11
-categories: [Javascrpt, Automation, Drafts, Raindrop, APIs]
+categories: [Javascript, Automation, Drafts, Raindrop]
 ---
 I've been working on making Drafts the central component to my workflow. Today I went to the [Drafts directory](https://directory.getdrafts.com/) to look for an Action to send link to [Raindrop](https://raindrop.io/) (where I store bookmark links), and found that there wasn't one. I decided it was time to create my first custom Action, which turned out to be pretty easy.
 
