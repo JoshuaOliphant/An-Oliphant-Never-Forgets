@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Drafts to Raindrop Action
+title: Drafts to Jekyll Action
 date: 2024-02-11
 categories: [Javascript, Automation, Drafts, Github]
 ---

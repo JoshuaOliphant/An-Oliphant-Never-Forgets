@@ -10,16 +10,14 @@ Hi, I'm Joshua 👋! I'm an experienced Senior Software Engineer specializing in
 
 If you're interested in learning more about me, check out my [/now page](https://joshuaoliphant.github.io/An-Oliphant-Never-Forgets/now).
 
+Want to get in touch? Drop me an email at [joshua.oliphant@hey.com](mailto:joshua.oliphant@hey.com).
+
 You can also find me on other platforms:
 
 - My personal website and blog, [An Oliphant Never Forgets](https://joshuaoliphant.github.io/An-Oliphant-Never-Forgets/)
 - [GitHub](https://github.com/joshuaoliphant)
 - [LinkedIn](https://linkedin.com/in/joshuaoliphant)
 - [Mastodon](https://techhub.social/@oliphant)
-
-Want to get in touch? Drop me an email at [joshua.oliphant@hey.com](mailto:joshua.oliphant@hey.com).
-
-A Markdown copy of my CV is right here for your convenience.
 
 **Experience**
 ---------------
