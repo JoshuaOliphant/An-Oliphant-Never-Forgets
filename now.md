@@ -10,8 +10,8 @@ which was, in turn, inspired by others.
 
 - Automation, I'm trying to automate every little bit of my workflow, even if it takes longer to automate than actually do the task. Besides being fun, it has become a way to constantly put myself in the mindset of automating everything. Plus, ChatGPT makes most tasks that I wouldn't bother automating trivial.
 - Working on my blog, trying to make it a regular part of my routine (I even made a [Drafts action](https://directory.getdrafts.com/a/2QL), and looking at examples of other people's blogs that I like.
-- I work at Nortal as a Senior Engineer focused on SRE and DevOps. Creating Gitlab pipelines that deploy to Kubernetes, containerizing, and using Helm.
-- Taking care of the woodland creatures that live on my property, mainly birds, but now there are baby rats in my compost bin. As a kid, I had a pet rat, so I find them quite adorable.
+- I was recently laid off at Nortal, where I worked as a Senior Engineer focused on SRE and DevOps. Creating Gitlab pipelines that deploy to Kubernetes, containerizing, and using Helm.
+- Taking care of the birds that live on my property.
 
 **What are my interests?**
 
